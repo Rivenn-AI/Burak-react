@@ -1,1 +1,201 @@
 console.log("hello world");
+//Mit task-Y
+
+function sameNumber(a: number[], b: number[]) {
+  let result: number[] = [];
+  for (let i = 0; i < a.length; i++) {
+    for (let j = 0; j < b.length; j++) {
+      if (a[i] === b[j]) {
+        result.push(a[i]);
+      }
+    }
+  }
+  return result;
+}
+console.log(sameNumber([1, 3, 6, 4], [9, 6, 2, 5]));
+/**  PROJECT STANDARDS:
+ - Logging standarts
+ - Naming standarts
+   function, method variables--- camel case goHome
+   class => pascal                     MemberService
+   folder => KEBAB
+   css => SNAKE                        button-style
+ - error handiling  
+**/
+/**  
+ Traditional Api
+ Rest Api
+ GraphQl Api 
+ **/
+
+import { count } from "node:console";
+
+/** 
+    Traditional FD => BSSR (Admin) => EJS
+    MOdern FD => SPA => REACT (Users) 
+    
+    
+    // send | render | redirect | json
+    
+    Coocies bu   yopshib oladi
+    self destroy
+    **/
+
+/** Validationlar
+ * Frontend validation
+ * Backend validation
+ * Database validation
+ */
+// function countOccurrences(obj: any, str: any) {
+//   let count = 0;
+
+//   for (const key of Object.keys(obj)) {
+//     if (key === str) {
+//       count++;
+//     }
+
+//     if (typeof obj[key] === "object" && obj[key] !== null) {
+//       count += countOccurrences(obj[key], str);
+//     }
+//   }
+
+//   return count;
+// }
+// console.log(
+//   countOccurrences(
+//     {
+//       model: "Bugatti",
+//       steer: {
+//         model: "HANKOOK",
+//         size: 30,
+//       },
+//     },
+//     "model",
+//   ),
+// );
+// MIT task-W
+// function arryToAll(a: number[], b: number) {
+//   const result = [];
+//   for (let i = 0; i < a.length; i += b) {
+//     a.slice(i, i + b);
+//     result.push(a.slice(i, i + b));
+//   }
+//   return result;
+// }
+// console.log(arryToAll([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 4));
+
+//Mit task_V
+// function harif(a: string) {
+//   let result: { [key: string]: number } = {};
+//   for (let i = 0; i < a.length; i++) {
+//     let char = a[i];
+//     if (result[char]) {
+//       result[char]++;
+//     } else {
+//       result[char] = 1;
+//     }
+//   }
+//   return result;
+// }
+// console.log(harif("jaloliddin"));
+//MIT task-U
+// export interface Number {
+//   number: number;
+// }
+// function toqSon(a: number): number {
+//   let count = 0;
+//   for (let i = 0; i <= a; i++) {
+//     if (i % 2 !== 0) {
+//       count++;
+//     }
+//   }
+//   return count;
+// }
+// console.log(toqSon(23));
+//MIT task_T
+// function toArrayToOne(a: number[], b: number[]) {
+//   let result: number[] = [];
+//   for (let i = 0; i < a.length; i++) {
+//     result.push(a[i]);
+//   }
+//   for (let j = 0; j < b.length; j++) {
+//     result.push(b[j]);
+//   }
+//   result.sort((i, j) => i - j);
+//   return result;
+// }
+// console.log(toArrayToOne([4, 6, 2, 8], [3, 1, 7, 5]));
+//Mit task_S
+// function missingNumber(a: number[]) {
+//   let result: number[] = [];
+//   for (let i = 0; i <= a.length; i++) {
+//     if (!a.includes(i)) {
+//       result.push(i);
+//     }
+//   }
+//   return result;
+// }
+// console.log(missingNumber([1, 0, 5, 4, 3, 7]));
+//mit task-R
+// function calculate(a: string) {
+//   const numbers = a.split(/[+\-*\/]/);
+//   numbers[0];
+//   numbers[1];
+//   const first = Number(numbers[0]);
+//   const second = Number(numbers[1]);
+//   return first + second;
+// }
+// console.log(calculate("3*5"));
+//Mit task_Q
+// function hasProperty(object: object, property: string) {
+//   if (property in object) {
+//     return true;
+//   } else {
+//     return false;
+//   }
+// }
+// console.log(hasProperty({ name: "Audi", model: "M3" }, "year"));
+
+// Mit task_P
+// function objecToArray(obj: any) {
+//   return Object.entries(obj);
+// }
+// console.log(objecToArray({ a: 10, b: 23 }));
+//Mit task_O
+// function addNumbers(str: any[]) {
+//   let sum = 0;
+//   str.forEach((value) => {
+//     if (typeof value === "number") {
+//       sum += value;
+//     }
+//   });
+//   return sum;
+// }
+// console.log(addNumbers([20, "15", { age: 10 }, 4]));
+
+//Mit task_N
+// function palindrom(a: any) {
+//   let word = a;
+//   let reverse = "";
+//   for (let i = word.length - 1; i >= 0; i--) {
+//     reverse += word[i];
+//     if (word === reverse) {
+//       return true;
+//     }
+//     return false;
+//   }
+// }
+// console.log(palindrom("olma"));
+
+//MIT task_M
+// function kvadrat(number: any) {
+//   let result = [];
+//   for (let i = 0; i < number.length; i++) {
+//     result.push({
+//       number: number[i],
+//       square: number[i] * number[i],
+//     });
+//   }
+//   return result;
+// }
+// console.log(kvadrat([3, 5, 9]));
