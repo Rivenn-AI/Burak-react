@@ -1,18 +1,28 @@
 console.log("hello world");
-//Mit task-Y
-
-function sameNumber(a: number[], b: number[]) {
-  let result: number[] = [];
+//Mit task -Z
+function juftSon(a: number[]) {
+  let sum = 0;
   for (let i = 0; i < a.length; i++) {
-    for (let j = 0; j < b.length; j++) {
-      if (a[i] === b[j]) {
-        result.push(a[i]);
-      }
+    if (a[i] % 2 === 0) {
+      sum = sum + a[i];
     }
   }
-  return result;
+  return sum;
 }
-console.log(sameNumber([1, 3, 6, 4], [9, 6, 2, 5]));
+console.log(juftSon([1, 2, 5, 8]));
+//Mit task-Y
+// function sameNumber(a: number[], b: number[]) {
+//   let result: number[] = [];
+//   for (let i = 0; i < a.length; i++) {
+//     for (let j = 0; j < b.length; j++) {
+//       if (a[i] === b[j]) {
+//         result.push(a[i]);
+//       }
+//     }
+//   }
+//   return result;
+// }
+// console.log(sameNumber([1, 3, 6, 4], [9, 6, 2, 5]));
 /**  PROJECT STANDARDS:
  - Logging standarts
  - Naming standarts
