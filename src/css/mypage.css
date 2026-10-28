@@ -1,0 +1,228 @@
+@import url("https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500&family=DM+Sans:wght@400&family=Poppins:wght@400;500;600&display=swap");
+
+/* =========================================================
+   MY PAGE (UserPage)
+   Sizes are measured from your screenshot and the Figma file
+   ========================================================= */
+
+.my-page {
+  width: 100%;
+  padding: 50px 0 120px;
+  background: #f8f8ff;
+}
+
+.my-page .my-page-config {
+  width: 1302px; /* Figma "Configuration" frame: 1302 x 770 */
+  max-width: 100%;
+  height: 770px;
+  margin: 0 auto;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* ---------------- LEFT: edit form ---------------- */
+
+.my-page .config-left {
+  flex: 0 1 822px;
+  padding-top: 96px; /* 96 + 120 + 59 + 54 + 59 + 54 + 59 + 200 + 29 + 40 = 770 */
+  gap: 59px;
+}
+
+.my-page .upload-section {
+  height: 120px;
+  padding: 10px 0 0 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.my-page .upload-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.my-page .upload-title {
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  color: #140342;
+}
+
+.my-page .upload-hint {
+  margin: 6px 0 10px;
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  line-height: 18px;
+  color: #4f547b;
+}
+
+.my-page .upload-button input {
+  display: none;
+}
+
+.my-page .upload-button label {
+  width: 37px;
+  height: 37px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #cbcbcb;
+  border-radius: 8px;
+  color: #000;
+  cursor: pointer;
+}
+
+.my-page .upload-button label:hover {
+  background: #bdbdbd;
+}
+
+/* inputs and textarea share one style */
+.my-page .config-input {
+  width: 100%;
+  height: 54px;
+  padding: 0 20px;
+  background: #f6f6f6;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  font-family: "Poppins", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #4f547b;
+}
+
+.my-page .config-input::placeholder {
+  color: #a9abc0;
+  font-weight: 500;
+}
+
+.my-page .config-row {
+  flex-direction: row;
+  gap: 18px;
+}
+
+.my-page .config-area {
+  height: 200px;
+  padding: 18px 20px;
+  resize: none;
+}
+
+.my-page .save-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -30px; /* 59px gap above, 29px below the textarea */
+}
+
+.my-page .save-button.MuiButton-root {
+  width: 80px;
+  height: 40px;
+  background: #343434;
+  color: #d7b586;
+  border-radius: 5px;
+  font-family: "Roboto", sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.my-page .save-button.MuiButton-root:hover {
+  background: #4a4a4a;
+}
+
+/* ---------------- RIGHT: profile card ---------------- */
+
+.my-page .config-right {
+  flex: 0 0 400px;
+  width: 400px;
+  height: 400px;
+  padding-top: 21px;
+  align-items: center;
+  background: #f5f2fe;
+  border-radius: 16px;
+  box-shadow:
+    12px 12px 4px rgba(0, 0, 0, 0.2),
+    inset 0 0 12px 10px #d6d6ec;
+}
+
+.my-page .avatar-box {
+  position: relative;
+  width: 160px;
+  height: 162px;
+}
+
+.my-page .card-avatar {
+  width: 160px;
+  height: 162px;
+  border-radius: 37px;
+  object-fit: cover;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.my-page .card-badge {
+  position: absolute;
+  right: -5px;
+  bottom: -8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(209, 209, 209, 0.33);
+  border-radius: 50%;
+}
+
+.my-page .card-badge img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.my-page .card-name {
+  margin-top: 12px;
+  font-family: "Commissioner", sans-serif;
+  font-size: 28px;
+  line-height: 36px;
+  color: #08090d;
+}
+
+.my-page .card-role {
+  font-family: "Commissioner", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 36px;
+  color: #a1a1a1;
+}
+
+.my-page .card-address {
+  margin-top: 9px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  color: #a1a1a1;
+}
+
+.my-page .card-social {
+  margin-top: 33px;
+  display: flex;
+  flex-direction: row;
+  gap: 28px;
+}
+
+.my-page .card-social svg {
+  font-size: 20px;
+  color: #1e1e1e;
+}
+
+.my-page .card-desc {
+  margin: 12px 0 0;
+  font-family: "DM Sans", sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  color: #616164;
+}
