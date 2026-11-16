@@ -17,7 +17,7 @@ class ProductService {
       const result = await axios.get(url);
       console.log("getProducts", result);
 
-      return result.data.result;
+      return result.data;
     } catch (err) {
       console.log("error, getProduct", err);
       throw err;
