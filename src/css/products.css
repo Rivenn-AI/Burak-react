@@ -72,6 +72,27 @@
   font-family: "Poppins", sans-serif;
   font-size: 14px;
 }
+.products-page .products .search-box {
+  position: relative;
+}
+
+.products-page .products .search-box .clear-search-btn {
+  border: none;
+  background: transparent;
+  color: #888;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 0 10px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.products-page .products .search-box .clear-search-btn:hover {
+  color: #222;
+}
 
 .products-page .products .search-box .search-btn {
   height: 100%;
