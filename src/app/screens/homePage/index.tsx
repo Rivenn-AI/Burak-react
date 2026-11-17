@@ -29,9 +29,10 @@ const actionDispatch = (dispatch: Dispatch) => ({
 export default function HomePage() {
   const { setPopularDishes, setNewDishes, setTopUsers } =
     actionDispatch(useDispatch());
-
+  /// *** 1 *** USE..EFFECT companent ishga tushdi---->
   useEffect(() => {
     const product = new ProductService();
+    ///*** 2 *** BACKENTDAN MALUMOT OLIB KELISH API yaratish CALL---->
     product
       .getProducts({
         page: 1,
@@ -39,8 +40,11 @@ export default function HomePage() {
         order: "productViews",
         productCollection: ProductCollection.DISH,
       })
+
       .then((data) => {
         console.log("datapassed here ", data);
+        ///*** 3 *** MALUMOT DATA GA Product[] bub qaytdi---->
+        ///*** 3 *** Dispatch orqali Redux Action chaqirildi--->
         setPopularDishes(data);
       })
       .catch((err) => console.log(err));

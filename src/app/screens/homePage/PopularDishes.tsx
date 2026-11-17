@@ -16,6 +16,7 @@ import { Product } from "../../../lib/types/product";
 import { serverApi } from "../../../lib/config";
 
 /**REDUX SLICE & SELECTOR */
+// *** 5 ***  Store'dagi ro'yxatni ajratib oladi
 const popularDishesRetriever = createSelector(
   retrievePopularDishes,
   (popularDishes) => ({ popularDishes }),
@@ -23,9 +24,7 @@ const popularDishesRetriever = createSelector(
 
 export default function PopularDishes() {
   const { popularDishes } = useSelector(popularDishesRetriever);
-  console.log("popular dishes:", popularDishes);
-  console.log("Is Array:", Array.isArray(popularDishes));
-  console.log("Type:", typeof popularDishes);
+  // Redux Store'dagi popularDishes o'zgarsa, komponent avtomatik qayta render bo'ladi:
   return (
     <div className="popular-dishes-frame">
       <Container>

@@ -11,6 +11,27 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import { FreeMode, Navigation, Thumbs } from "swiper";
 
+import { createSelector } from "reselect";
+import { useDispatch, useSelector } from "react-redux";
+import { Product } from "../../../lib/types/product";
+import { setChosenProduct, setRestaurant } from "./slice";
+import { Dispatch } from "@reduxjs/toolkit";
+import { retrievChoesnProduct, retrievProducts } from "./selecter";
+
+const actionDispatch = (dispatch: Dispatch) => ({
+  setRestaurant: (data: Product[]) => dispatch(setRestaurant(data)),
+  setChosenProduct: (data: Product[]) => dispatch(setChosenProduct(data)),
+});
+
+const chosenProductRetriever = createSelector(
+  retrievChoesnProduct,
+  (chosenProduct) => ({ chosenProduct }),
+);
+
+const restaurantRetriever = createSelector(retrievProducts, (restaurant) => ({
+  restaurant,
+}));
+
 export default function ChosenProduct() {
   return (
     <div className={"chosen-product"}>
@@ -31,7 +52,7 @@ export default function ChosenProduct() {
                     <img className="slider-image" src={ele} />
                   </SwiperSlide>
                 );
-              }
+              },
             )}
           </Swiper>
         </Stack>

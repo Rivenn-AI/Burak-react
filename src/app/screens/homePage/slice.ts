@@ -13,6 +13,7 @@ const homePageSlice = createSlice({
   reducers: {
     setPopularDishes: (state, action) => {
       state.popularDishes = action.payload;
+      /// *** 4 ***  Ma'lumot endi global Redux Store'da!
     },
     setNewDishes: (state, action) => {
       state.newDishes = action.payload;
