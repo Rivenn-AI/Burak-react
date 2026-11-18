@@ -28,7 +28,7 @@ class ProductService {
     try {
       const url = `${this.path}/product/${productId}`;
       const result = await axios.get(url, { withCredentials: true });
-
+      ///Agar shu request uchun tegishli cookie mavjud bo‘lsa, uni backendga yubor
       console.log("getproduct", result);
 
       return result.data;

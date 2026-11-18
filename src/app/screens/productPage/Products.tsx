@@ -21,29 +21,33 @@ import { serverApi } from "../../../lib/config";
 import { useHistory } from "react-router-dom";
 
 /**REDUX SLICE & SELECTOR */
+/// actionDispatch — Redux ma'lumotlarini yangilash
 const actionDispatch = (dispatch: Dispatch) => ({
   setProducts: (data: Product[]) => dispatch(setProducts(data)),
 });
 
+/////productsRetriever — Redux'dan ma'lumot olish
 const productsRetriever = createSelector(retrievProducts, (products) => ({
   products,
 }));
 
 export default function Products() {
-  const { setProducts } = actionDispatch(useDispatch());
-  const { products } = useSelector(productsRetriever);
+  const { setProducts } = actionDispatch(useDispatch()); ///useDispatch — Redux'ga ma'lumot yuborish
+  const { products } = useSelector(productsRetriever); //useSelector — Redux store'dan ma'lumot olish uchun ishlatiladi.
   const [productSearch, setProductSearch] = useState<ProductInquiry>({
     page: 1,
     limit: 8,
     order: "createdAt",
     productCollection: ProductCollection.DISH,
     search: "",
-  });
+  }); //setProductSearch Bu eski qiymatlarni saqlagan holda page'ni 2 ga o‘zgartiradi.
 
   const [searchText, setSearchText] = useState<string>("");
   const history = useHistory();
+  /////////////////////////// call //////////////////// Oddiy data olib kelib berish uchun
 
   useEffect(() => {
+    ////////////////// Birinchi useEffect — backenddan product olish
     const product = new ProductService();
     product
       .getProducts(productSearch)
@@ -51,36 +55,42 @@ export default function Products() {
         setProducts(data);
       })
       .catch((err) => console.log(err));
-  }, [productSearch]);
+  }, [productSearch]); //// dependency erray productSearch o‘zgarganda useEffect qayta ishlaydi.
+  /////////////////////////// search buycha data olib kelib berish
   useEffect(() => {
     if (searchText === "") {
-      productSearch.search = "";
-      setProductSearch({ ...productSearch });
+      //yozilgan qiymat
+      productSearch.search = ""; //backentdan kegan malumot
+      setProductSearch({ ...productSearch }); ///spread operator.
     }
   }, [searchText]);
+
+  /////////////////////////-------------/////////////
   /** HANDELLERS */
+
+  ///////// Taomlarni turi bucha taxlash------->
   const searchCollectionHandler = (collection: ProductCollection) => {
     productSearch.page = 1;
     productSearch.productCollection = collection;
     setProductSearch({ ...productSearch });
   };
-
+  /////////productlarni tartiblash uchun.
   const searchOrderHandler = (order: string) => {
     productSearch.page = 1;
     productSearch.order = order;
     setProductSearch({ ...productSearch });
   };
-
+  ///////////qidiruv tugmasi bosilganda ishlaydi.
   const searchProductHandler = () => {
     productSearch.search = searchText;
     setProductSearch({ ...productSearch });
   };
-
+  /////////////Bu pagination, ya'ni sahifalar orasida o'tish uchun.
   const paginationHandler = (e: ChangeEvent<any>, value: number) => {
     productSearch.page = value;
     setProductSearch({ ...productSearch });
   };
-
+  /////////////product tanlanganda ishlaydi.
   const chooseDishHandler = (id: string) => {
     history.push(`/products/${id}`);
   };
