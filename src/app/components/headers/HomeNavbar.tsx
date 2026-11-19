@@ -6,10 +6,14 @@ import Basket from "./Basket";
 
 interface HomeNavbarProps {
   cartItems: CartItem[];
+  onAdd: (input: CartItem) => void;
+  onRemove: (input: CartItem) => void;
+  onDelete: (input: CartItem) => void;
+  onDeleteAll: () => void;
 }
 
 export default function HomeNavbar(props: HomeNavbarProps) {
-  const { cartItems } = props;
+  const { cartItems, onAdd, onRemove, onDelete, onDeleteAll } = props;
   const authMember = null;
 
   const [count, setCount] = useState<number>(0);
@@ -69,7 +73,13 @@ export default function HomeNavbar(props: HomeNavbarProps) {
                 Help
               </NavLink>
             </Box>
-            <Basket cartItems={cartItems} />
+            <Basket
+              cartItems={cartItems}
+              onAdd={onAdd}
+              onRemove={onRemove}
+              onDelete={onDelete}
+              onDeleteAll={onDeleteAll}
+            />
             {!authMember ? (
               <Box>
                 <Button variant="contained" className="login-button">
