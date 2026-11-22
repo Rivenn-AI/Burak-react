@@ -65,6 +65,8 @@ export default function ChosenProduct(props: ChosenProductsProps) {
       .catch((err) => console.log(err));
   }, []);
   if (!chosenProduct) return null;
+
+  ///////////----------------->>>>>>>>>>
   return (
     <div className={"chosen-product"}>
       <Box className={"title"}>Product Detail</Box>
@@ -123,7 +125,7 @@ export default function ChosenProduct(props: ChosenProductsProps) {
                   price: chosenProduct.productPrice,
                   image: chosenProduct.productImages[0],
                 });
-                e.stopPropagation();
+                e.stopPropagation(); //JavaScript'da eventning parent elementlarga tarqalishini to'xtatadi. bubling
               }}
             >
               <Button variant="contained">Add To Basket</Button>

@@ -26,7 +26,7 @@ export default function Basket(props: BasketProps) {
   const itemsPrice = cartItems.reduce(
     (a: number, c: CartItem) => a + c.quantity * c.price,
     0,
-  );
+  ); // Basketdagi maxsulot narxlari
 
   const shippingCost: number = itemsPrice < 100 ? 5 : 0;
 

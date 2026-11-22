@@ -40,7 +40,7 @@ class MemberService {
 
       const member: Member = result.data.member;
       console.log("member", member);
-      localStorage.setItem("memberData", JSON.stringify(member));
+      localStorage.setItem("memberData", JSON.stringify(member)); //JavaScript ma'lumotini string ko'rinishiga o'tkazad Object → String |JSON.PARSE---->String → Object
       return member;
     } catch (err) {
       console.log("memberSignUp err", err);

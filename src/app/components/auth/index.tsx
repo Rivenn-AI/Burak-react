@@ -37,6 +37,7 @@ const ModalImg = styled.img`
 `;
 
 interface AuthenticationModalProps {
+  /// Appdan propsda 4 ta malumot
   signupOpen: boolean;
   loginOpen: boolean;
   handleSignupClose: () => void;
@@ -45,31 +46,36 @@ interface AuthenticationModalProps {
 
 export default function AuthenticationModal(props: AuthenticationModalProps) {
   const { signupOpen, loginOpen, handleSignupClose, handleLoginClose } = props;
-  const classes = useStyles();
+  const classes = useStyles(); //// Csss urtaga olib keladi
+
+  /////////////////////////////////////////########################. INPUT HANDILING
   const [memberNick, setMemberNick] = useState("");
   const [memberPhone, setMemberPhone] = useState("");
   const [memberPassword, setMemberPassword] = useState("");
-  const { setAuthMember } = useGlobals();
+  const { setAuthMember } = useGlobals(); //Global holat
+
   /** HANDLERS **/
   const handleUsername = (e: T) => {
     setMemberNick(e.target.value);
   };
   const handlePassword = (e: T) => {
-    console.log(e.target.value);
     setMemberPassword(e.target.value);
   };
   const handlePhone = (e: T) => {
-    console.log(e.target.value);
     setMemberPhone(e.target.value);
   };
-
   const handlePasswordKeyDown = (e: T) => {
+    /////Enter button
     if (e.key === "Enter" && signupOpen) {
       handleSignupRequest().then();
     } else if (e.key === "Enter" && loginOpen) {
       handleLoginpRequest().then();
     }
   };
+  ///////////////////////////////////////##################. INPUT HANDILING^^^^^
+
+  ////////////////////////////////////////////////////// SIGN UP REQUEST
+
   const handleSignupRequest = async () => {
     try {
       const isFill =
@@ -85,7 +91,7 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
       const member = new MemberService();
       const result = await member.signup(signupInput);
       // Saving authentic users
-      setAuthMember(result);
+      setAuthMember(result); /////AUTHENTICATION=======>>>
       handleSignupClose();
     } catch (err) {
       console.log(err);
@@ -93,6 +99,8 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
       sweetErrorHandling(err).then();
     }
   };
+  //////////////////////////////////////////////////////.  LOGIN REQUEST
+
   const handleLoginpRequest = async () => {
     try {
       const isFill = memberNick !== "" && memberPassword !== "";
@@ -105,22 +113,21 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
       };
       const member = new MemberService();
       const result = await member.login(loginInput);
-      // Saving authentic users
-      setAuthMember(result);
+      setAuthMember(result); /////AUTHENTICATION=======>>>
       handleLoginClose();
     } catch (err) {
       console.log(err);
       sweetErrorHandling(err).then();
     }
   };
-
+  //////////////////////////////////////////////////////
   return (
     <div>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         className={classes.modal}
-        open={signupOpen}
+        open={signupOpen} ///// Fade ga
         onClose={handleSignupClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
@@ -130,7 +137,7 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
       >
         <Fade in={signupOpen}>
           <Stack
-            className={classes.paper}
+            className={classes.paper} //////useStledan kelyapti
             direction={"row"}
             sx={{ width: "800px" }}
           >
