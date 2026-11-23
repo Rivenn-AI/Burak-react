@@ -11,14 +11,13 @@ import { serverApi } from "../../../lib/config";
 import { Order, OrderItem } from "../../../lib/types/orders";
 
 /**REDUX SLICE & SELECTOR */
-// *** 5 ***  Store'dagi ro'yxatni ajratib oladi
 const pausedOrdersRetriever = createSelector(
   retrievePausedorders,
   (pausedOrders) => ({ pausedOrders }),
 );
 export default function PausedOrders() {
   const { pausedOrders } = useSelector(pausedOrdersRetriever);
-  const orders: number[] = [1, 2];
+  /** HAndellers */
   return (
     <TabPanel value={"1"}>
       <Stack>
