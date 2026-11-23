@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState } from "react";
+import React, { SyntheticEvent, useEffect, useState } from "react";
 import { Box, Container, Stack, Tab, Tabs } from "@mui/material";
 import TabContext from "@mui/lab/TabContext";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -9,8 +9,10 @@ import { Dispatch } from "@reduxjs/toolkit";
 import { createSelector } from "reselect";
 import { setPousedOrders, setFinishedOrders, setProcessOrders } from "./slice";
 import "../../../css/order.css";
-import { Order } from "../../../lib/types/orders";
+import { Order, OrderInquiry } from "../../../lib/types/orders";
 import { useDispatch } from "react-redux";
+import { OrderStatus } from "../../../lib/enums/order";
+import OrderService from "../../services/OrderService";
 
 /**REDUX SLICE & SELECTOR */
 const actionDispatch = (dispatch: Dispatch) => ({
@@ -20,9 +22,35 @@ const actionDispatch = (dispatch: Dispatch) => ({
 });
 
 export default function OrdersPage() {
+  const dispatch = useDispatch();
+
   const { setFinishedOrders, setPousedOrders, setProcessOrders } =
-    actionDispatch(useDispatch);
+    actionDispatch(dispatch);
   const [value, setValue] = useState("1");
+  const [orderInquiry, setOrderInquiry] = useState<OrderInquiry>({
+    page: 1,
+    limit: 3,
+    orderStatus: OrderStatus.PAUSE,
+  });
+
+  useEffect(() => {
+    const order = new OrderService();
+
+    order
+      .getMyOrders({ ...orderInquiry, orderStatus: OrderStatus.PAUSE })
+      .then((data) => setPousedOrders(data))
+      .catch((err) => console.log(err));
+
+    order
+      .getMyOrders({ ...orderInquiry, orderStatus: OrderStatus.PROCESS })
+      .then((data) => setProcessOrders(data))
+      .catch((err) => console.log(err));
+
+    order
+      .getMyOrders({ ...orderInquiry, orderStatus: OrderStatus.FINISH })
+      .then((data) => setFinishedOrders(data))
+      .catch((err) => console.log(err));
+  }, [orderInquiry]);
 
   const handleChange = (e: SyntheticEvent, newValue: string) => {
     setValue(newValue);
