@@ -4,7 +4,7 @@ import TabPanel from "@mui/lab/TabPanel";
 
 import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
-import { retrieveFinishedOrders, retrieveProcessOrders } from "./selector";
+import { retrieveFinishedOrders } from "./selector";
 import { Product } from "../../../lib/types/product";
 import { serverApi } from "../../../lib/config";
 import { Order, OrderItem } from "../../../lib/types/orders";
@@ -16,7 +16,6 @@ const finishedOrderRetriever = createSelector(
 );
 export default function FinishedOrders() {
   const { finishedOrders } = useSelector(finishedOrderRetriever);
-  const orders: number[] = [];
   return (
     <TabPanel value={"3"}>
       <Stack>
@@ -28,12 +27,14 @@ export default function FinishedOrders() {
                   const product: Product = order.productData.filter(
                     (ele: Product) => item.productId === ele._id,
                   )[0];
-                  const imagePath = `${serverApi}/${product.productImages[0]}`;
+                  const imagePath = product?.productImages?.[0]
+                    ? `${serverApi}/${product.productImages[0]}`
+                    : "/img/kebab-fresh.webp";
 
                   return (
                     <Box key={item._id} className={"orders-name-price"}>
                       <img
-                        src={"/img/kebab-fresh.webp"}
+                        src={imagePath}
                         className={"order-dish-img"}
                       />
                       <p className={"title-dish"}>{product.productName}</p>

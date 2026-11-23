@@ -18,9 +18,11 @@ const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     return storedMember ? JSON.parse(storedMember) : null;
   });
-
+  const [orderBuilder, setOrderBuilder] = useState<Date>(new Date());
   return (
-    <GlobalContext.Provider value={{ authMember, setAuthMember }}>
+    <GlobalContext.Provider
+      value={{ authMember, setAuthMember, orderBuilder, setOrderBuilder }}
+    >
       {children}
     </GlobalContext.Provider>
   );
