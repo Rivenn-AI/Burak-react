@@ -34,23 +34,31 @@ export function Settings() {
   /** HANDLERS **/
 
   const memberNickHandler = (e: T) => {
-    memberUpdateInput.memberNick = e.target.value;
-    setMemberUpdateInput({ ...memberUpdateInput });
+    setMemberUpdateInput((prev) => ({
+      ...prev,
+      memberNick: e.target.value,
+    }));
   };
 
   const memberPhoneHandler = (e: T) => {
-    memberUpdateInput.memberPhone = e.target.value;
-    setMemberUpdateInput({ ...memberUpdateInput });
+    setMemberUpdateInput((prev) => ({
+      ...prev,
+      memberPhone: e.target.value,
+    }));
   };
 
   const memberAddressHandler = (e: T) => {
-    memberUpdateInput.memberAddress = e.target.value;
-    setMemberUpdateInput({ ...memberUpdateInput });
+    setMemberUpdateInput((prev) => ({
+      ...prev,
+      memberAddress: e.target.value,
+    }));
   };
 
   const memberDescriptionHandler = (e: T) => {
-    memberUpdateInput.memberDesc = e.target.value;
-    setMemberUpdateInput({ ...memberUpdateInput });
+    setMemberUpdateInput((prev) => ({
+      ...prev,
+      memberDesc: e.target.value,
+    }));
   };
 
   const handleSubmitButton = async () => {
@@ -89,8 +97,11 @@ export function Settings() {
       return;
     }
 
-    memberUpdateInput.memberImage = file;
-    setMemberUpdateInput({ ...memberUpdateInput });
+    setMemberUpdateInput((prev) => ({
+      ...prev,
+      memberImage: file,
+    }));
+
     setMemberImage(URL.createObjectURL(file));
   };
 

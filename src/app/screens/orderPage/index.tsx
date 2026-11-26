@@ -15,6 +15,8 @@ import { OrderStatus } from "../../../lib/enums/order";
 import OrderService from "../../services/OrderService";
 import { useGlobals } from "../../hooks/useGlobals";
 import { useHistory } from "react-router-dom";
+import { MemberType } from "../../../lib/enums/member.enum";
+import { serverApi } from "../../../lib/config";
 
 /**REDUX SLICE & SELECTOR */
 const actionDispatch = (dispatch: Dispatch) => ({
@@ -94,23 +96,40 @@ export default function OrdersPage() {
             <Box className={"member-box"}>
               <div className={"order-user-img"}>
                 <img
-                  src={"/icons/default-user.svg"}
+                  src={
+                    authMember?.memberImage
+                      ? `${serverApi}/${authMember.memberImage}`
+                      : "/icons/default-user.svg"
+                  }
                   className={"order-user-avatar"}
                 />
                 <div className={"order-user-icon-box"}>
                   <img
-                    src={"/icons/user-badge.svg"}
+                    src={
+                      authMember?.memberType === MemberType.RESTAURANT
+                        ? "/icons/restaurant.svg"
+                        : "/icons/user-badge.svg"
+                    }
                     className={"order-user-prof-img"}
                   />
                 </div>
               </div>
-              <span className={"order-user-name"}>Martin</span>
-              <span className={"order-user-prof"}>User</span>
+              <span className={"order-user-name"}>
+                {authMember?.memberNick}
+              </span>
+              <span className={"order-user-prof"}>
+                {authMember?.memberType === MemberType.USER}
+              </span>
             </Box>
             <Box className={"liner"}></Box>
             <Box className={"order-user-address"}>
               <LocationOnIcon />
-              <div className={"spec-address-txt"}>Busan</div>
+              <div className={"spec-address-txt"}>
+                {" "}
+                {authMember?.memberAddress
+                  ? authMember.memberAddress
+                  : "no address"}
+              </div>
             </Box>
           </Box>
 
