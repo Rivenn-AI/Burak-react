@@ -93,13 +93,22 @@ export function Settings() {
         throw new Error(Messages.error3);
       }
 
+      const isFileUploaded = memberUpdateInput.memberImage instanceof File;
+      const previewBlob = memberImage; // Tanlangan rasmning blob ko'rinishi
+
       const member = new MemberService();
       const result = await member.updateMember(memberUpdateInput);
 
-      // Yangi rasmni darhol o'rnatamiz
-      if (result?.memberImage) {
-        setMemberImage(getImageUrl(result.memberImage));
+      // Agar backend yangi rasmni qaytargan bo'lsa
+      if (result?.memberImage && result.memberImage !== authMember?.memberImage) {
+        setMemberImage(getImageUrl(result.memberImage) + `?t=${Date.now()}`);
+      } else if (isFileUploaded) {
+        // Agar backend { new: true } yo'qligi sababli eski rasmni qaytarsa,
+        // foydalanuvchi yuklagan yangi rasmni ekranda saqlab qolamiz:
+        result.memberImage = previewBlob;
+        setMemberImage(previewBlob);
       }
+
       setAuthMember(result);
 
       await sweetTopSmallSuccessAlert("Modified Successfully!", 700);
