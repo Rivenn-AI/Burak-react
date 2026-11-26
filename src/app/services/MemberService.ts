@@ -1,6 +1,11 @@
 import axios from "axios";
 import { serverApi } from "../../lib/config";
-import { LoginInput, Member, MemberInput } from "../../lib/types/member";
+import {
+  LoginInput,
+  Member,
+  MemberInput,
+  MemberUpdateInput,
+} from "../../lib/types/member";
 
 class MemberService {
   private readonly path: string;
@@ -40,7 +45,7 @@ class MemberService {
 
       const member: Member = result.data.member;
       console.log("member", member);
-      localStorage.setItem("memberData", JSON.stringify(member)); //JavaScript ma'lumotini string ko'rinishiga o'tkazad Object → String |JSON.PARSE---->String → Object
+      localStorage.setItem("memberData", JSON.stringify(member));
       return member;
     } catch (err) {
       console.log("memberSignUp err", err);
@@ -73,6 +78,38 @@ class MemberService {
       return result.data.logout;
     } catch (err) {
       console.log("logout err", err);
+      throw err;
+    }
+  }
+
+  public async updateMember(input: MemberUpdateInput): Promise<Member> {
+    try {
+      const formData = new FormData();
+      if (input.memberNick) formData.append("memberNick", input.memberNick);
+      if (input.memberPhone) formData.append("memberPhone", input.memberPhone);
+      if (input.memberAddress !== undefined)
+        formData.append("memberAddress", input.memberAddress);
+      if (input.memberDesc !== undefined)
+        formData.append("memberDesc", input.memberDesc);
+
+      // Agar yangi File tanlangan bo'lsa, FormData ga biriktiramiz
+      if (input.memberImage && typeof input.memberImage !== "string") {
+        formData.append("memberImage", input.memberImage);
+      }
+
+      // FormData yuborilganda axios Content-Type va boundary ni avtomatik o'rnatadi
+      const result = await axios.post(`${this.path}/member/update`, formData, {
+        withCredentials: true,
+      });
+      console.log("updateMember result:", result);
+
+      const member: Member = result.data?.member
+        ? result.data.member
+        : result.data;
+      localStorage.setItem("memberData", JSON.stringify(member));
+      return member;
+    } catch (err) {
+      console.log("updateMember err:", err);
       throw err;
     }
   }

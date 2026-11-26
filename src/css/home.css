@@ -85,6 +85,7 @@
 .homepage .popular-dishes-frame .cards-frame .card {
   min-height: 430px;
   min-width: 300px;
+  gap: 3px;
   cursor: pointer;
 }
 

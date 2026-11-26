@@ -15,13 +15,37 @@ const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
 
     const storedMember = localStorage.getItem("memberData");
+    if (!storedMember) return null;
 
-    return storedMember ? JSON.parse(storedMember) : null;
+    try {
+      const parsed = JSON.parse(storedMember);
+      return parsed?.member ? parsed.member : parsed;
+    } catch (e) {
+      return null;
+    }
   });
+
+  const setAuthMemberHandler = (member: Member | null) => {
+    const cleanMember = (member as any)?.member
+      ? (member as any).member
+      : member;
+    setAuthMember(cleanMember);
+    if (cleanMember) {
+      localStorage.setItem("memberData", JSON.stringify(cleanMember));
+    } else {
+      localStorage.removeItem("memberData");
+    }
+  };
+
   const [orderBuilder, setOrderBuilder] = useState<Date>(new Date());
   return (
     <GlobalContext.Provider
-      value={{ authMember, setAuthMember, orderBuilder, setOrderBuilder }}
+      value={{
+        authMember,
+        setAuthMember: setAuthMemberHandler,
+        orderBuilder,
+        setOrderBuilder,
+      }}
     >
       {children}
     </GlobalContext.Provider>

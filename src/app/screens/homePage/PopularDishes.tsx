@@ -87,6 +87,7 @@ export default function PopularDishes() {
                         <Typography
                           startDecorator={<DescriptionOutlinedIcon />}
                           textColor="neutral.300"
+                          noWrap
                         >
                           {product.productDesc}
                         </Typography>
