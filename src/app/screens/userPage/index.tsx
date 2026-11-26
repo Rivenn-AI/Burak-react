@@ -6,15 +6,29 @@ import YouTubeIcon from "@mui/icons-material/YouTube";
 import { Settings } from "./Settings";
 import "../../../css/userPage.css";
 import { useHistory } from "react-router-dom";
+import { useGlobals } from "../../hooks/useGlobals";
 import { serverApi } from "../../../lib/config";
 import { MemberType } from "../../../lib/enums/member.enum";
-import { useGlobals } from "../../hooks/useGlobals";
 
 export default function UserPage() {
   const history = useHistory();
   const { authMember } = useGlobals();
 
   if (!authMember) history.push("/");
+
+  const getImageUrl = (imagePath?: string) => {
+    if (!imagePath) return "/icons/default-user.svg";
+    if (
+      imagePath.startsWith("http://") ||
+      imagePath.startsWith("https://") ||
+      imagePath.startsWith("blob:")
+    ) {
+      return imagePath;
+    }
+    let clean = imagePath.replace(/\\/g, "/");
+    if (clean.startsWith("/")) clean = clean.slice(1);
+    return `${serverApi}/${clean}`;
+  };
 
   return (
     <div className={"user-page"}>
@@ -38,13 +52,10 @@ export default function UserPage() {
               >
                 <div className={"order-user-img"}>
                   <img
-                    src={
-                      authMember?.memberImage
-                        ? `${serverApi}/${authMember.memberImage}`
-                        : "/icons/default-user.svg"
-                    }
+                    key={authMember?.memberImage}
+                    src={getImageUrl(authMember?.memberImage)}
                     className={"order-user-avatar"}
-                    alt={authMember?.memberNick ?? "User avatar"}
+                    alt=""
                   />
                   <div className={"order-user-icon-box"}>
                     <img
@@ -64,23 +75,31 @@ export default function UserPage() {
                   {authMember?.memberType}
                 </span>
                 <span className={"order-user-prof"}>
+                  {authMember?.memberPhone
+                    ? authMember.memberPhone
+                    : "no phone"}
+                </span>
+              </Box>
+              <Box className={"liner"}></Box>
+              <Box className={"order-user-address"}>
+                <div className={"spec-address-txt"}>
                   {authMember?.memberAddress
                     ? authMember.memberAddress
                     : "no address"}
-                </span>
+                </div>
               </Box>
-              <Box className={"user-media-box"}>
-                <FacebookIcon />
-                <InstagramIcon />
-                <TelegramIcon />
-                <YouTubeIcon />
-              </Box>
-              <p className={"user-desc"}>
-                {authMember?.memberDesc
-                  ? authMember.memberDesc
-                  : "no description"}
-              </p>
             </Box>
+            <Box className={"order-info-box"}>
+              <FacebookIcon />
+              <InstagramIcon />
+              <TelegramIcon />
+              <YouTubeIcon />
+            </Box>
+            <p className={"user-desc"}>
+              {authMember?.memberDesc
+                ? authMember.memberDesc
+                : "no description"}
+            </p>
           </Stack>
         </Stack>
       </Container>

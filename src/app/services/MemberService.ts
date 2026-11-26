@@ -92,20 +92,55 @@ class MemberService {
       if (input.memberDesc !== undefined)
         formData.append("memberDesc", input.memberDesc);
 
-      // Agar yangi File tanlangan bo'lsa, FormData ga biriktiramiz
+      // Yangi tanlangan faylni aniq nomi bilan FormData ga biriktiramiz
       if (input.memberImage && typeof input.memberImage !== "string") {
-        formData.append("memberImage", input.memberImage);
+        formData.append(
+          "memberImage",
+          input.memberImage,
+          (input.memberImage as any).name || "avatar.jpg",
+        );
       }
 
-      // FormData yuborilganda axios Content-Type va boundary ni avtomatik o'rnatadi
       const result = await axios.post(`${this.path}/member/update`, formData, {
         withCredentials: true,
       });
       console.log("updateMember result:", result);
 
-      const member: Member = result.data?.member
-        ? result.data.member
-        : result.data;
+      const backendMember = result.data?.member || result.data;
+
+      // Mavjud localStorage dagi ma'lumotlarni olamiz
+      let currentLocal: any = {};
+      try {
+        const stored = localStorage.getItem("memberData");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          currentLocal = parsed?.member ? parsed.member : parsed;
+        }
+      } catch (e) {}
+
+      // Rasm yo'lini teskari sleshlardan tozalaymiz
+      let cleanImage = backendMember?.memberImage;
+      if (cleanImage && typeof cleanImage === "string") {
+        cleanImage = cleanImage.replace(/\\/g, "/");
+        if (cleanImage.startsWith("/")) cleanImage = cleanImage.slice(1);
+      }
+
+      // Backend eski qiymat qaytarsa ham yangi o'zgartirilgan qiymatlarni birlashtiramiz
+      const member: Member = {
+        ...currentLocal,
+        ...(typeof backendMember === "object" ? backendMember : {}),
+        ...(input.memberNick ? { memberNick: input.memberNick } : {}),
+        ...(input.memberPhone ? { memberPhone: input.memberPhone } : {}),
+        ...(input.memberAddress !== undefined
+          ? { memberAddress: input.memberAddress }
+          : {}),
+        ...(input.memberDesc !== undefined
+          ? { memberDesc: input.memberDesc }
+          : {}),
+        ...(cleanImage ? { memberImage: cleanImage } : {}),
+      };
+
+      console.log("updateMember combined member:", member);
       localStorage.setItem("memberData", JSON.stringify(member));
       return member;
     } catch (err) {

@@ -1,26 +1,39 @@
 import { Box } from "@mui/material";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import Button from "@mui/material/Button";
-
-import { serverApi } from "../../../lib/config";
-import { useState } from "react";
+import { useGlobals } from "../../hooks/useGlobals";
+import { useEffect, useState } from "react";
 import { MemberUpdateInput } from "../../../lib/types/member";
-import { Messages } from "../../../lib/config";
+import { T } from "../../../lib/types/common";
 import {
   sweetErrorHandling,
   sweetTopSmallSuccessAlert,
 } from "../../../lib/sweetAlert";
+import { Messages, serverApi } from "../../../lib/config";
 import MemberService from "../../services/MemberService";
-import { T } from "../../../lib/types/common";
-import { useGlobals } from "../../hooks/useGlobals";
 
 export function Settings() {
   const { authMember, setAuthMember } = useGlobals();
+
+  // Rasm URL manzilini to'g'ri shakllantirish (blob, http yoki serverApi orqali)
+  const getImageUrl = (imagePath?: string) => {
+    if (!imagePath) return "/icons/default-user.svg";
+    if (
+      imagePath.startsWith("http://") ||
+      imagePath.startsWith("https://") ||
+      imagePath.startsWith("blob:")
+    ) {
+      return imagePath;
+    }
+    let clean = imagePath.replace(/\\/g, "/");
+    if (clean.startsWith("/")) clean = clean.slice(1);
+    return `${serverApi}/${clean}`;
+  };
+
   const [memberImage, setMemberImage] = useState<string>(
-    authMember?.memberImage
-      ? `${serverApi}/${authMember.memberImage}`
-      : "/icons/default-user.svg",
+    getImageUrl(authMember?.memberImage),
   );
+
   const [memberUpdateInput, setMemberUpdateInput] = useState<MemberUpdateInput>(
     {
       memberNick: authMember?.memberNick,
@@ -31,34 +44,40 @@ export function Settings() {
     },
   );
 
-  /** HANDLERS **/
+  // authMember o'zgarganda (masalan yangilanganda) forma va rasmni sinxronlash
+  useEffect(() => {
+    if (authMember?.memberImage) {
+      setMemberImage(getImageUrl(authMember.memberImage));
+    }
+    setMemberUpdateInput({
+      memberNick: authMember?.memberNick,
+      memberPhone: authMember?.memberPhone,
+      memberAddress: authMember?.memberAddress,
+      memberDesc: authMember?.memberDesc,
+      memberImage: authMember?.memberImage,
+    });
+  }, [authMember]);
+
+  /** Handlers */
 
   const memberNickHandler = (e: T) => {
-    setMemberUpdateInput((prev) => ({
-      ...prev,
-      memberNick: e.target.value,
-    }));
+    memberUpdateInput.memberNick = e.target.value;
+    setMemberUpdateInput({ ...memberUpdateInput });
   };
 
   const memberPhoneHandler = (e: T) => {
-    setMemberUpdateInput((prev) => ({
-      ...prev,
-      memberPhone: e.target.value,
-    }));
+    memberUpdateInput.memberPhone = e.target.value;
+    setMemberUpdateInput({ ...memberUpdateInput });
   };
 
   const memberAddressHandler = (e: T) => {
-    setMemberUpdateInput((prev) => ({
-      ...prev,
-      memberAddress: e.target.value,
-    }));
+    memberUpdateInput.memberAddress = e.target.value;
+    setMemberUpdateInput({ ...memberUpdateInput });
   };
 
-  const memberDescriptionHandler = (e: T) => {
-    setMemberUpdateInput((prev) => ({
-      ...prev,
-      memberDesc: e.target.value,
-    }));
+  const memberDesciptionHandler = (e: T) => {
+    memberUpdateInput.memberDesc = e.target.value;
+    setMemberUpdateInput({ ...memberUpdateInput });
   };
 
   const handleSubmitButton = async () => {
@@ -74,44 +93,50 @@ export function Settings() {
         throw new Error(Messages.error3);
       }
 
-      const memberService = new MemberService();
-      const updatedMember = await memberService.updateMember(memberUpdateInput);
-      setAuthMember(updatedMember);
-      await sweetTopSmallSuccessAlert("Modified successfully!", 700);
+      const member = new MemberService();
+      const result = await member.updateMember(memberUpdateInput);
+
+      // Yangi rasmni darhol o'rnatamiz
+      if (result?.memberImage) {
+        setMemberImage(getImageUrl(result.memberImage));
+      }
+      setAuthMember(result);
+
+      await sweetTopSmallSuccessAlert("Modified Successfully!", 700);
     } catch (err) {
       console.log(err);
-      await sweetErrorHandling(err);
+      sweetErrorHandling(err).then();
     }
   };
 
-  const memberImageViewer = (e: T) => {
+  const handleImageViewer = (e: T) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    console.log("file:", file);
-    const fileType = file.type;
+    console.log("file: ", file);
+    const fileType = file.type?.toLowerCase();
     const validateImageTypes = ["image/jpg", "image/jpeg", "image/png"];
 
     if (!validateImageTypes.includes(fileType)) {
       sweetErrorHandling(Messages.error5).then();
-      return;
+    } else {
+      setMemberUpdateInput((prev) => ({
+        ...prev,
+        memberImage: file,
+      }));
+      // Pre-rendering: tanlangan zahoti blob orqali ekranda ko'rsatish
+      setMemberImage(URL.createObjectURL(file));
     }
-
-    setMemberUpdateInput((prev) => ({
-      ...prev,
-      memberImage: file,
-    }));
-
-    setMemberImage(URL.createObjectURL(file));
   };
 
   return (
     <Box className={"settings"}>
       <Box className={"member-media-frame"}>
         <img
+          key={memberImage}
           src={memberImage}
           className={"mb-image"}
-          alt={authMember?.memberNick ?? "User avatar"}
+          alt=""
         />
         <div className={"media-change-box"}>
           <span>Upload image</span>
@@ -121,9 +146,9 @@ export function Settings() {
               <CloudDownloadIcon />
               <input
                 type="file"
-                accept="image/jpeg,image/png"
-                onChange={memberImageViewer}
                 hidden
+                accept="image/jpg, image/jpeg, image/png"
+                onChange={handleImageViewer}
               />
             </Button>
           </div>
@@ -135,7 +160,7 @@ export function Settings() {
           <input
             className={"spec-input mb-nick"}
             type="text"
-            placeholder={authMember?.memberNick ?? "Username"}
+            placeholder={authMember?.memberNick}
             value={memberUpdateInput.memberNick ?? ""}
             name="memberNick"
             onChange={memberNickHandler}
@@ -159,7 +184,11 @@ export function Settings() {
           <input
             className={"spec-input  mb-address"}
             type="text"
-            placeholder={authMember?.memberAddress ?? "no address"}
+            placeholder={
+              authMember?.memberAddress
+                ? authMember.memberAddress
+                : "no address"
+            }
             value={memberUpdateInput.memberAddress ?? ""}
             name="memberAddress"
             onChange={memberAddressHandler}
@@ -172,11 +201,11 @@ export function Settings() {
           <textarea
             className={"spec-textarea mb-description"}
             placeholder={
-              authMember?.memberDesc ? authMember?.memberDesc : "no description"
+              authMember?.memberDesc ? authMember.memberDesc : "no description"
             }
             value={memberUpdateInput.memberDesc ?? ""}
             name="memberDesc"
-            onChange={memberDescriptionHandler}
+            onChange={memberDesciptionHandler}
           />
         </div>
       </Box>

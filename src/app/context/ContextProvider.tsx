@@ -7,20 +7,15 @@ const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const cookies = new Cookies();
 
   const [authMember, setAuthMember] = useState<Member | null>(() => {
-    const token = cookies.get("accessToken");
-
-    if (!token) {
-      localStorage.removeItem("memberData");
-      return null;
-    }
-
     const storedMember = localStorage.getItem("memberData");
+
     if (!storedMember) return null;
 
     try {
       const parsed = JSON.parse(storedMember);
       return parsed?.member ? parsed.member : parsed;
     } catch (e) {
+      localStorage.removeItem("memberData");
       return null;
     }
   });
@@ -29,7 +24,9 @@ const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const cleanMember = (member as any)?.member
       ? (member as any).member
       : member;
-    setAuthMember(cleanMember);
+
+    // Yangi obyekt referensi bilan React da darhol qayta render bo'lishini ta'minlaymiz
+    setAuthMember(cleanMember ? { ...cleanMember } : null);
     if (cleanMember) {
       localStorage.setItem("memberData", JSON.stringify(cleanMember));
     } else {
