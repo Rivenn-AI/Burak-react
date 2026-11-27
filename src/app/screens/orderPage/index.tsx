@@ -63,6 +63,20 @@ export default function OrdersPage() {
   };
   if (!authMember) history.push("/");
 
+  const getImageUrl = (imagePath?: string) => {
+    if (!imagePath) return "/icons/default-user.svg";
+    if (
+      imagePath.startsWith("http://") ||
+      imagePath.startsWith("https://") ||
+      imagePath.startsWith("blob:")
+    ) {
+      return imagePath;
+    }
+    let clean = imagePath.replace(/\\/g, "/");
+    if (clean.startsWith("/")) clean = clean.slice(1);
+    return `${serverApi}/${clean}`;
+  };
+
   return (
     <div className={"order-page"}>
       <Container className="order-container">
@@ -96,13 +110,13 @@ export default function OrdersPage() {
             <Box className={"member-box"}>
               <div className={"order-user-img"}>
                 <img
-                  src={
-                    authMember?.memberImage
-                      ? `${serverApi}/${authMember.memberImage}`
-                      : "/icons/default-user.svg"
-                  }
+                  key={authMember?.memberImage}
+                  src={getImageUrl(authMember?.memberImage)}
+
+                  alt=""
                   className={"order-user-avatar"}
                 />
+
                 <div className={"order-user-icon-box"}>
                   <img
                     src={

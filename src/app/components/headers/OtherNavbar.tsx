@@ -42,6 +42,20 @@ export default function OtherNavbar(props: OtherNavbarProps) {
     handleLogoutRequest,
   } = props;
 
+  const getImageUrl = (imagePath?: string) => {
+    if (!imagePath) return "/icons/default-user.svg";
+    if (
+      imagePath.startsWith("http://") ||
+      imagePath.startsWith("https://") ||
+      imagePath.startsWith("blob:")
+    ) {
+      return imagePath;
+    }
+    let clean = imagePath.replace(/\\/g, "/");
+    if (clean.startsWith("/")) clean = clean.slice(1);
+    return `${serverApi}/${clean}`;
+  };
+
   const { authMember } = useGlobals();
   return (
     <div className="other-navbar">
@@ -99,12 +113,10 @@ export default function OtherNavbar(props: OtherNavbarProps) {
               </Box>
             ) : (
               <img
-                className="user-avatar"
-                src={
-                  authMember?.memberImage
-                    ? `${serverApi}/${authMember.memberImage}`
-                    : "/icons/default-user.svg"
-                }
+                key={authMember?.memberImage}
+                src={getImageUrl(authMember?.memberImage)}
+                className={"user-avatar"}
+                alt=""
                 aria-haspopup={"true"}
                 onClick={handleLogoutClick}
               />

@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { serverApi } from "../../../lib/config";
 import { CartItem } from "../../../lib/types/search";
 import { useGlobals } from "../../hooks/useGlobals";
 import Basket from "./Basket";
@@ -44,6 +45,20 @@ export default function HomeNavbar(props: HomeNavbarProps) {
   } = props;
 
   const { authMember } = useGlobals();
+
+  const getImageUrl = (imagePath?: string) => {
+    if (!imagePath) return "/icons/default-user.svg";
+    if (
+      imagePath.startsWith("http://") ||
+      imagePath.startsWith("https://") ||
+      imagePath.startsWith("blob:")
+    ) {
+      return imagePath;
+    }
+    let clean = imagePath.replace(/\\/g, "/");
+    if (clean.startsWith("/")) clean = clean.slice(1);
+    return `${serverApi}/${clean}`;
+  };
 
   /**Handler */
 
@@ -105,12 +120,10 @@ export default function HomeNavbar(props: HomeNavbarProps) {
               </Box>
             ) : (
               <img
-                className="user-avatar"
-                src={
-                  authMember?.memberImage
-                    ? `http://localhost:3003/${authMember.memberImage}`
-                    : "/icons/default-user.svg"
-                }
+                key={authMember?.memberImage}
+                src={getImageUrl(authMember?.memberImage)}
+                className={"user-avatar"}
+                alt=""
                 aria-haspopup={"true"}
                 onClick={handleLogoutClick}
               />
