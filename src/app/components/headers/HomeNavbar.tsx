@@ -1,4 +1,3 @@
-import { Logout } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -8,25 +7,27 @@ import {
   MenuItem,
   Stack,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import Logout from "@mui/icons-material/Logout";
 import { NavLink } from "react-router-dom";
-import { serverApi } from "../../../lib/config";
-import { CartItem } from "../../../lib/types/search";
-import { useGlobals } from "../../hooks/useGlobals";
 import Basket from "./Basket";
+import React from "react";
+import { CartItem } from "../../../lib/types/search";
+
+import { serverApi } from "../../../lib/config";
+import { useGlobals } from "../../hooks/useGlobals";
 
 interface HomeNavbarProps {
   cartItems: CartItem[];
-  onAdd: (input: CartItem) => void;
-  onRemove: (input: CartItem) => void;
-  onDelete: (input: CartItem) => void;
+  onAdd: (item: CartItem) => void;
+  onRemove: (item: CartItem) => void;
+  onDelete: (item: CartItem) => void;
   onDeleteAll: () => void;
   setSignupOpen: (isOpen: boolean) => void;
   setLoginOpen: (isOpen: boolean) => void;
-  anchorEl: HTMLElement | null;
   handleLogoutClick: (e: React.MouseEvent<HTMLElement>) => void;
+  anchorEl: HTMLElement | null;
   handleCloseLogout: () => void;
-  handleLogoutRequest: () => {};
+  handleLogoutRequest: () => void;
 }
 
 export default function HomeNavbar(props: HomeNavbarProps) {
@@ -43,24 +44,9 @@ export default function HomeNavbar(props: HomeNavbarProps) {
     handleCloseLogout,
     handleLogoutRequest,
   } = props;
-
   const { authMember } = useGlobals();
 
-  const getImageUrl = (imagePath?: string) => {
-    if (!imagePath) return "/icons/default-user.svg";
-    if (
-      imagePath.startsWith("http://") ||
-      imagePath.startsWith("https://") ||
-      imagePath.startsWith("blob:")
-    ) {
-      return imagePath;
-    }
-    let clean = imagePath.replace(/\\/g, "/");
-    if (clean.startsWith("/")) clean = clean.slice(1);
-    return `${serverApi}/${clean}`;
-  };
-
-  /**Handler */
+  /** HANDLERS **/
 
   return (
     <div className="home-navbar">
@@ -68,9 +54,10 @@ export default function HomeNavbar(props: HomeNavbarProps) {
         <Stack className="menu">
           <Box>
             <NavLink to="/">
-              <img className="brand-logo" src="/icons/burak.svg" />
+              <img className="brand-logo" src="/icons/burak.svg" alt="logo" />
             </NavLink>
           </Box>
+
           <Stack className="links">
             <Box className={"hover-line"}>
               <NavLink to="/" activeClassName={"underline"}>
@@ -101,6 +88,7 @@ export default function HomeNavbar(props: HomeNavbarProps) {
                 Help
               </NavLink>
             </Box>
+            {/* BASKET */}
             <Basket
               cartItems={cartItems}
               onAdd={onAdd}
@@ -108,6 +96,7 @@ export default function HomeNavbar(props: HomeNavbarProps) {
               onDelete={onDelete}
               onDeleteAll={onDeleteAll}
             />
+
             {!authMember ? (
               <Box>
                 <Button
@@ -120,11 +109,15 @@ export default function HomeNavbar(props: HomeNavbarProps) {
               </Box>
             ) : (
               <img
-                key={authMember?.memberImage}
-                src={getImageUrl(authMember?.memberImage)}
-                className={"user-avatar"}
-                alt=""
-                aria-haspopup={"true"}
+                id="account-button"
+                alt="user"
+                className="user-avatar"
+                src={
+                  authMember.memberImage
+                    ? `${serverApi}/${authMember.memberImage}`
+                    : "/icons/default-user.svg"
+                }
+                aria-haspopup="true"
                 onClick={handleLogoutClick}
               />
             )}
@@ -141,12 +134,6 @@ export default function HomeNavbar(props: HomeNavbarProps) {
                   overflow: "visible",
                   filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
                   mt: 1.5,
-                  "& .MuiAvatar-root": {
-                    width: 32,
-                    height: 32,
-                    ml: -0.5,
-                    mr: 1,
-                  },
                   "&:before": {
                     content: '""',
                     display: "block",
@@ -174,11 +161,11 @@ export default function HomeNavbar(props: HomeNavbarProps) {
           </Stack>
         </Stack>
         <Stack className={"header-frame"}>
-          <Stack className={"detail"}>
-            <Box className={"head-main-text"}>
+          <Stack className="detail">
+            <Box className={"head-main-txt"}>
               World's Most Delicious Cousine
             </Box>
-            <Box className={"wel-txt"}>The Choice, not just a choice</Box>
+            <Box className={"wel-txt"}>The Coice, not just a choice</Box>
             <Box className={"service-txt"}>24 hours service</Box>
             <Box className={"signup"}>
               {!authMember ? (
@@ -192,8 +179,8 @@ export default function HomeNavbar(props: HomeNavbarProps) {
               ) : null}
             </Box>
           </Stack>
-          <Box className={"logo-frame"}>
-            <div className={"logo-img"}></div>
+          <Box className="logo-frame">
+            <div className="logo-img"></div>
           </Box>
         </Stack>
       </Container>

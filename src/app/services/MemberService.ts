@@ -9,30 +9,37 @@ import {
 
 class MemberService {
   private readonly path: string;
+
   constructor() {
     this.path = serverApi;
   }
+
   public async getTopUsers(): Promise<Member[]> {
     try {
-      const url = this.path + "/member/get-users";
+      const url = this.path + "/member/top-users";
       const result = await axios.get(url);
-      console.log("getTopUsers", result);
+      console.log("getTopUsers:", result);
 
       return result.data;
     } catch (err) {
-      console.log("error, getTopusers", err);
+      console.log("Error, getTopUsers", err);
       throw err;
     }
   }
+
+  /**
+   * Roli: Restoran (oshxona egasi/admin) ma'lumotlarini serverdan olish.
+   */
   public async getRestaurant(): Promise<Member> {
     try {
       const url = this.path + "/member/restaurant";
       const result = await axios.get(url);
-      console.log("getTopUsers", result);
+      console.log("getRestaurant:", result);
+
       const restaurant: Member = result.data;
-      return result.data;
+      return restaurant;
     } catch (err) {
-      console.log("error, getTopusers", err);
+      console.log("Error, getRestaurant", err);
       throw err;
     }
   }
@@ -41,29 +48,28 @@ class MemberService {
     try {
       const url = this.path + "/member/signup";
       const result = await axios.post(url, input, { withCredentials: true });
-      console.log("signUp", result);
+      console.log("signup:", result);
 
       const member: Member = result.data.member;
-      console.log("member", member);
+      console.log("member:", member);
       localStorage.setItem("memberData", JSON.stringify(member));
+
       return member;
     } catch (err) {
-      console.log("memberSignUp err", err);
+      console.log("Error, signup:", err);
       throw err;
     }
   }
+
   public async login(input: LoginInput): Promise<Member> {
     try {
       const url = this.path + "/member/login";
       const result = await axios.post(url, input, { withCredentials: true });
-      console.log("login", result);
-
       const member: Member = result.data.member;
-      console.log("member", member);
       localStorage.setItem("memberData", JSON.stringify(member));
       return member;
     } catch (err) {
-      console.log("login err", err);
+      console.log("Error, login:", err);
       throw err;
     }
   }
@@ -72,12 +78,12 @@ class MemberService {
     try {
       const url = this.path + "/member/logout";
       const result = await axios.post(url, {}, { withCredentials: true });
-      console.log("logout", result);
+      console.log("logout:", result);
 
       localStorage.removeItem("memberData");
       return result.data.logout;
     } catch (err) {
-      console.log("logout err", err);
+      console.log("Error, logout:", err);
       throw err;
     }
   }
@@ -85,68 +91,30 @@ class MemberService {
   public async updateMember(input: MemberUpdateInput): Promise<Member> {
     try {
       const formData = new FormData();
-      if (input.memberNick) formData.append("memberNick", input.memberNick);
-      if (input.memberPhone) formData.append("memberPhone", input.memberPhone);
-      if (input.memberAddress !== undefined)
-        formData.append("memberAddress", input.memberAddress);
-      if (input.memberDesc !== undefined)
-        formData.append("memberDesc", input.memberDesc);
-
-      // Yangi tanlangan faylni aniq nomi bilan FormData ga biriktiramiz
-      if (input.memberImage && typeof input.memberImage !== "string") {
-        formData.append(
-          "memberImage",
-          input.memberImage,
-          (input.memberImage as any).name || "avatar.jpg",
-        );
+      formData.append("memberNick", input.memberNick || "");
+      formData.append("memberPhone", input.memberPhone || "");
+      formData.append("memberAddress", input.memberAddress || "");
+      formData.append("memberDesc", input.memberDesc || "");
+      if (input.memberImage instanceof File) {
+        formData.append("memberImage", input.memberImage);
+      } else {
+        formData.append("memberImage", input.memberImage || "");
       }
 
       const result = await axios.post(`${this.path}/member/update`, formData, {
         withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log("updateMember result:", result);
+      console.log("updateMember:", result);
 
-      const backendMember = result.data?.member || result.data;
-
-      // Mavjud localStorage dagi ma'lumotlarni olamiz
-      let currentLocal: any = {};
-      try {
-        const stored = localStorage.getItem("memberData");
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          currentLocal = parsed?.member ? parsed.member : parsed;
-        }
-      } catch (e) {}
-
-      // Rasm yo'lini teskari sleshlardan tozalaymiz
-      let cleanImage = backendMember?.memberImage;
-      if (cleanImage && typeof cleanImage === "string") {
-        cleanImage = cleanImage.replace(/\\/g, "/");
-        if (cleanImage.startsWith("/")) cleanImage = cleanImage.slice(1);
-      }
-
-      // Backend eski qiymat qaytarsa ham yangi o'zgartirilgan qiymatlarni birlashtiramiz
-      const member: Member = {
-        ...currentLocal,
-        ...(typeof backendMember === "object" ? backendMember : {}),
-        ...(input.memberNick ? { memberNick: input.memberNick } : {}),
-        ...(input.memberPhone ? { memberPhone: input.memberPhone } : {}),
-        ...(input.memberAddress !== undefined
-          ? { memberAddress: input.memberAddress }
-          : {}),
-        ...(input.memberDesc !== undefined
-          ? { memberDesc: input.memberDesc }
-          : {}),
-        ...(cleanImage ? { memberImage: cleanImage } : {}),
-      };
-
-      console.log("updateMember combined member:", member);
+      const member: Member = result.data;
       localStorage.setItem("memberData", JSON.stringify(member));
       return member;
     } catch (err) {
-      console.log("updateMember err:", err);
+      console.log("Error, updateMember:", err);
       throw err;
     }
   }
 }
+
 export default MemberService;

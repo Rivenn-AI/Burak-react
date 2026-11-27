@@ -1,32 +1,34 @@
-import { Logout } from "@mui/icons-material";
 import {
+  Container,
+  Stack,
   Box,
   Button,
-  Container,
   ListItemIcon,
   Menu,
   MenuItem,
-  Stack,
 } from "@mui/material";
+import Logout from "@mui/icons-material/Logout";
+import React from "react";
 import { NavLink } from "react-router-dom";
-import { serverApi } from "../../../lib/config";
-import { CartItem } from "../../../lib/types/search";
-import { useGlobals } from "../../hooks/useGlobals";
 import Basket from "./Basket";
+import { CartItem } from "../../../lib/types/search";
+import { serverApi } from "../../../lib/config";
+import { useGlobals } from "../../hooks/useGlobals";
 
 interface OtherNavbarProps {
   cartItems: CartItem[];
-  onAdd: (input: CartItem) => void;
-  onRemove: (input: CartItem) => void;
-  onDelete: (input: CartItem) => void;
+  onAdd: (item: CartItem) => void;
+  onRemove: (item: CartItem) => void;
+  onDelete: (item: CartItem) => void;
   onDeleteAll: () => void;
   setSignupOpen: (isOpen: boolean) => void;
   setLoginOpen: (isOpen: boolean) => void;
-  anchorEl: HTMLElement | null;
   handleLogoutClick: (e: React.MouseEvent<HTMLElement>) => void;
+  anchorEl: HTMLElement | null;
   handleCloseLogout: () => void;
-  handleLogoutRequest: () => {};
+  handleLogoutRequest: () => void;
 }
+
 export default function OtherNavbar(props: OtherNavbarProps) {
   const {
     cartItems,
@@ -41,21 +43,6 @@ export default function OtherNavbar(props: OtherNavbarProps) {
     handleCloseLogout,
     handleLogoutRequest,
   } = props;
-
-  const getImageUrl = (imagePath?: string) => {
-    if (!imagePath) return "/icons/default-user.svg";
-    if (
-      imagePath.startsWith("http://") ||
-      imagePath.startsWith("https://") ||
-      imagePath.startsWith("blob:")
-    ) {
-      return imagePath;
-    }
-    let clean = imagePath.replace(/\\/g, "/");
-    if (clean.startsWith("/")) clean = clean.slice(1);
-    return `${serverApi}/${clean}`;
-  };
-
   const { authMember } = useGlobals();
   return (
     <div className="other-navbar">
@@ -63,9 +50,10 @@ export default function OtherNavbar(props: OtherNavbarProps) {
         <Stack className="menu">
           <Box>
             <NavLink to="/">
-              <img className="brand-logo" src="/icons/burak.svg" />
+              <img className="brand-logo" src="/icons/burak.svg" alt="logo" />
             </NavLink>
           </Box>
+
           <Stack className="links">
             <Box className={"hover-line"}>
               <NavLink to="/">Home</NavLink>
@@ -94,6 +82,7 @@ export default function OtherNavbar(props: OtherNavbarProps) {
                 Help
               </NavLink>
             </Box>
+            {/* BASKET */}
             <Basket
               cartItems={cartItems}
               onAdd={onAdd}
@@ -101,6 +90,7 @@ export default function OtherNavbar(props: OtherNavbarProps) {
               onDelete={onDelete}
               onDeleteAll={onDeleteAll}
             />
+
             {!authMember ? (
               <Box>
                 <Button
@@ -113,11 +103,15 @@ export default function OtherNavbar(props: OtherNavbarProps) {
               </Box>
             ) : (
               <img
-                key={authMember?.memberImage}
-                src={getImageUrl(authMember?.memberImage)}
-                className={"user-avatar"}
-                alt=""
-                aria-haspopup={"true"}
+                id="account-button"
+                alt="user"
+                className="user-avatar"
+                src={
+                  authMember.memberImage
+                    ? `${serverApi}/${authMember.memberImage}`
+                    : "/icons/default-user.svg"
+                }
+                aria-haspopup="true"
                 onClick={handleLogoutClick}
               />
             )}
@@ -134,12 +128,6 @@ export default function OtherNavbar(props: OtherNavbarProps) {
                   overflow: "visible",
                   filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
                   mt: 1.5,
-                  "& .MuiAvatar-root": {
-                    width: 32,
-                    height: 32,
-                    ml: -0.5,
-                    mr: 1,
-                  },
                   "&:before": {
                     content: '""',
                     display: "block",

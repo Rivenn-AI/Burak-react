@@ -11,7 +11,7 @@ const ordersPageSlice = createSlice({
   name: "ordersPage",
   initialState,
   reducers: {
-    setPousedOrders: (state, action) => {
+    setPausedOrders: (state, action) => {
       state.pausedOrders = action.payload;
       /// *** 4 ***  Ma'lumot endi global Redux Store'da!
     },
@@ -23,7 +23,7 @@ const ordersPageSlice = createSlice({
     },
   },
 });
-export const { setPousedOrders, setProcessOrders, setFinishedOrders } =
+export const { setPausedOrders, setProcessOrders, setFinishedOrders } =
   ordersPageSlice.actions;
 
 const OrdersPageReducer = ordersPageSlice.reducer;
